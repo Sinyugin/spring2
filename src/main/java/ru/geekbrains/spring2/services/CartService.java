@@ -3,43 +3,35 @@ package ru.geekbrains.spring2.services;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.geekbrains.spring2.dtos.Cart;
 import ru.geekbrains.spring2.entities.Product;
-import ru.geekbrains.spring2.entities.ProductInCart;
-import ru.geekbrains.spring2.repositories.ProductInCartRepository;
-
-import java.util.List;
+import ru.geekbrains.spring2.exceptions.ResourceNotFoundException;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
-
     private final ProductService productService;
-    private ProductInCart productInCart;
+    private Cart tempCart;
+
     @PostConstruct
-            public void init(){
-        productInCart = new ProductInCart();
+    public void  init(){
+        tempCart = new Cart();
     }
 
-    private final ProductInCartRepository productInCartRepository;
-
-    public List<ProductInCart> findAll() {
-        return productInCartRepository.findAll();
+    public Cart getCurrentCart(){
+        return tempCart;
     }
 
-    public void addInCart(Long id) {
-
-        //**Не пойму почему при добавлениив в корзину продукты добавляются в той же нумерации как и в списке магазина
-        // Почему я не могу добавить продукт в корзину больше одного раза**//
-
-        Product product = productService.findById(id).get();
-        productInCart.setId(product.getId());
-        productInCart.setTitle(product.getTitle());
-        productInCart.setPrice(product.getPrice());
-        productInCart.setQuantity(1);
-        productInCartRepository.save(productInCart);
+    public void add(Long productId){
+        Product product = productService.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Не удается добавить продукт с id: " + productId + " в корзину. Продукт не найден"));
+        tempCart.add(product);
     }
 
-    public void deleteById(Long id) {
-        productInCartRepository.deleteById(id);
+    public void crear(){
+        tempCart.clear();
+    }
+
+    public void deleteById(int productId) {
+        tempCart.dellProduct(productId);
     }
 }
