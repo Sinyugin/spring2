@@ -17,25 +17,30 @@ $scope.loadProducts = function(){
             });
    }
 
-   $scope.showListInCart = function(){
-        $http.get('http://localhost:8080/market/api/v1/cart').then(function(response){
-        $scope.listInCart = response.data;
-        });
-   }
-
-   $scope.addProductInCart = function(productId){
+    $scope.addToCart = function (productId){
         $http.get('http://localhost:8080/market/api/v1/cart/add/' + productId).then(function(response){
-        $scope.showListInCart();
+        $scope.loadCart();
+        });
+    }
+   $scope.loadCart = function(){
+        $http.get('http://localhost:8080/market/api/v1/cart').then(function(response){
+        $scope.cart = response.data;
         });
    }
 
-   $scope.deleteProductInCartById = function(productId){
-        $http.delete('http://localhost:8080/market/api/v1/cart/delete/' + productId).then(function (response){
-            $scope.showListInCart();
-            });
+   $scope.cleanCart = function(){
+        $http.get('http://localhost:8080/market/api/v1/cart/clean').then(function(response){
+        $scope.cart = response.data;
+        });
+   }
+
+   $scope.deleteProductInCart = function(productId){
+        $http.get('http://localhost:8080/market/api/v1/cart/delete/' + productId).then(function(response){
+        $scope.cart = response.data;
+        });
    }
 
 $scope.loadProducts();
-$scope.showListInCart();
+$scope.loadCart();
 
 });
