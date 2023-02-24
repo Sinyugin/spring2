@@ -36,7 +36,6 @@ public class Cart {
             }
             items.add(new CartItem(product.getId(), product.getTitle(), 1, product.getPrice(), product.getPrice()));
         }
-
         recalculate();
     }
 
@@ -51,7 +50,11 @@ public class Cart {
         items.removeAll(items);
     }
 
-    public void dellProduct(int productId) {
-        items.remove(items.get(productId).getProductId());
+    public void dellProduct(Long productId) {
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getProductId().equals(productId)) {
+                items.remove(items.get(i));
+            }
+        }
     }
 }
