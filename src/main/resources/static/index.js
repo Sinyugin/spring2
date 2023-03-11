@@ -36,7 +36,7 @@ $scope.loadProducts = function(){
 
    $scope.deleteProductInCart = function(productId){
         $http.get('http://localhost:8080/market/api/v1/cart/delete/' + productId).then(function(response){
-        $scope.cart = response.data;
+        $scope.loadCart();
         });
    }
 
